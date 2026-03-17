@@ -20,8 +20,8 @@ def main():
     occurrence_count = history.count(command_sig)
     if occurrence_count >= 2:
         skill_dir = "/Users/david/.gemini/skills/task-monitor"
-        os.system(f"afplay '{skill_dir}/assets/LandingInterrupted.mp3' &")
-        os.system("say 'Tool Loop Detected' &")
+        if os.system(f"/usr/bin/afplay '{skill_dir}/assets/LandingInterrupted.mp3' > /dev/null 2>&1") != 0:
+            os.system("say 'Tool Loop Detected' &")
         sys.stderr.write(f'\n\033[1;31m[TASK-MONITOR]\033[0m \033[1;31m❯ Tool Loop Detected\033[0m\n')
         if os.path.exists(loop_file): os.remove(loop_file)
         print(json.dumps({"decision": "deny", "reason": "Tool loop detected."}))
