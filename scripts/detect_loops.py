@@ -37,16 +37,14 @@ def main():
     occurrence_count = history.count(current_response)
     
     if occurrence_count >= 2:
-        # Use asset from skill dir
-        skill_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        skill_dir = "/Users/david/.gemini/skills/task-monitor"
         asset_path = os.path.join(skill_dir, "assets", "LandingInterrupted.mp3")
-        os.system(f"afplay '{asset_path}' > /dev/null 2>&1 &")
+        os.system(f"/usr/bin/afplay '{asset_path}' > /dev/null 2>&1 &")
         
         if os.path.exists(state_file):
             os.remove(state_file)
             
-        # Visual Theme Output (Red Alert)
-        print(f"\n\033[1;31m[TASK-MONITOR]\033[0m \033[1;31m❯ Loop Detected (Turn {turn_id})\033[0m")
+        sys.stderr.write(f"\n\033[1;31m[TASK-MONITOR]\033[0m \033[1;31m❯ Loop Detected (Turn {turn_id})\033[0m\n")
         
         print(json.dumps({
             "continue": False,

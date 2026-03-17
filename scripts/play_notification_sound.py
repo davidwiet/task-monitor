@@ -18,9 +18,8 @@ def main():
     is_active = metadata.get("is_active_window", True)
     
     if not is_active:
-        os.system("afplay /System/Library/Sounds/Ping.aiff > /dev/null 2>&1 &")
-        # Visual Theme Output (Yellow/Ping Alert)
-        print(f"\n\033[1;33m[TASK-MONITOR]\033[0m \033[1m❯ Attention Required (Out-of-Focus Prompt)\033[0m")
+        os.system("/usr/bin/afplay /System/Library/Sounds/Ping.aiff > /dev/null 2>&1 &")
+        sys.stderr.write(f"\n\033[1;33m[TASK-MONITOR]\033[0m \033[1m❯ Attention Required (Out-of-Focus Prompt)\033[0m\n")
 
     print("{}")
 

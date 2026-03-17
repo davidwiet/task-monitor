@@ -66,17 +66,18 @@ def main():
                 
                 if t1 and t2:
                     diff = (t2 - t1).total_seconds()
+                    # Reverting threshold to 120s for final version
                     if diff >= 120:
-                        # Use asset from skill dir
-                        skill_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                        skill_dir = "/Users/david/.gemini/skills/task-monitor"
                         asset_path = os.path.join(skill_dir, "assets", "work-complete.mp3")
-                        os.system(f"afplay '{asset_path}' > /dev/null 2>&1 &")
-                        
-                        # Visual Theme Output (Blue Header)
-                        print(f"\n\033[1;34m[TASK-MONITOR]\033[0m \033[1m❯ Task Complete (Duration: {int(diff)}s)\033[0m")
+                        # Play sound
+                        os.system(f"/usr/bin/afplay '{asset_path}' > /dev/null 2>&1 &")
+                        # Output visual header to STDERR to avoid breaking JSON parsing on STDOUT
+                        sys.stderr.write(f"\n\033[1;34m[TASK-MONITOR]\033[0m \033[1m❯ Task Complete (Duration: {int(diff)}s)\033[0m\n")
     except Exception:
         pass
 
+    # STDOUT must be valid JSON only
     print("{}")
 
 if __name__ == "__main__":
