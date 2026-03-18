@@ -1,32 +1,53 @@
 #!/usr/bin/env python3
-import sys, json, os
+import sys, json, os, hashlib
+from utils import play_alert, notify, get_state_dir
+
 def main():
     try:
         data = sys.stdin.read()
-        if not data.strip(): print(json.dumps({"decision": "allow"})); return
+        if not data.strip():
+            print(json.dumps({"decision": "allow"}))
+            return
         payload = json.loads(data)
-    except: print(json.dumps({"decision": "allow"})); return
+    except Exception:
+        print(json.dumps({"decision": "allow"}))
+        return
+
     session_id = payload.get("session_id", "default")
     tool_name = payload.get("tool_name", "")
     tool_input = json.dumps(payload.get("tool_input", {}), sort_keys=True)
+    
+    # Unique signature for tool repetition tracking
     command_sig = f"{tool_name}:{tool_input}"
-    loop_file = os.path.expanduser(f"~/.gemini/tmp/loop_detection/{session_id}_tools.json")
-    os.makedirs(os.path.dirname(loop_file), exist_ok=True)
+    
+    state_dir = get_state_dir(session_id)
+    history_file = os.path.join(state_dir, "tool_history.json")
+    
     history = []
-    if os.path.exists(loop_file):
+    if os.path.exists(history_file):
         try:
-            with open(loop_file, "r") as f: history = json.load(f)
-        except: pass
+            with open(history_file, "r") as f:
+                history = json.load(f)
+        except Exception:
+            pass
+            
     occurrence_count = history.count(command_sig)
+    
+    # Deny if tool signature repeated 3 times total
     if occurrence_count >= 2:
-        skill_dir = "/Users/david/.gemini/skills/task-monitor"
-        if os.system(f"/usr/bin/afplay '{skill_dir}/assets/LandingInterrupted.mp3' > /dev/null 2>&1") != 0:
-            os.system("say 'Tool Loop Detected' &")
-        sys.stderr.write(f'\n\033[1;31m[TASK-MONITOR]\033[0m \033[1;31m❯ Tool Loop Detected\033[0m\n')
-        if os.path.exists(loop_file): os.remove(loop_file)
+        play_alert("LandingInterrupted")
+        notify("Tool Repetition Loop Detected", msg_type="alert")
+        if os.path.exists(history_file):
+            os.remove(history_file)
+        # Deny tool execution
         print(json.dumps({"decision": "deny", "reason": "Tool loop detected."}))
         return
+
     history.append(command_sig)
-    with open(loop_file, "w") as f: json.dump(history[-10:], f)
+    with open(history_file, "w") as f:
+        json.dump(history[-10:], f)
+
     print(json.dumps({"decision": "allow"}))
-if __name__ == "__main__": main()
+
+if __name__ == "__main__":
+    main()

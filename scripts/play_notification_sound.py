@@ -1,26 +1,34 @@
 #!/usr/bin/env python3
-import sys
-import json
-import os
+import sys, json, os, subprocess
+from utils import is_terminal_focused, notify, get_os
 
 def main():
     try:
-        payload_data = sys.stdin.read()
-        if not payload_data.strip():
+        data = sys.stdin.read()
+        if not data.strip():
             print("{}")
             return
-        payload = json.loads(payload_data)
+        payload = json.loads(data)
     except Exception:
         print("{}")
         return
 
+    # metadata.is_active_window is provided by the CLI if supported
     metadata = payload.get("metadata", {})
-    is_active = metadata.get("is_active_window", True)
+    is_active = metadata.get("is_active_window")
     
+    # Fallback to our custom focus detection
+    if is_active is None:
+        is_active = is_terminal_focused()
+        
     if not is_active:
-        os.system("/usr/bin/afplay /System/Library/Sounds/Ping.aiff > /dev/null 2>&1 &")
-        sys.stderr.write(f"\n\033[1;33m[TASK-MONITOR]\033[0m \033[1m❯ Attention Required (Out-of-Focus Prompt)\033[0m\n")
+        if get_os() == "Darwin":
+            # Standard system ping for macOS
+            subprocess.Popen(["afplay", "/System/Library/Sounds/Ping.aiff"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
+        notify("Attention Required (Gemini is waiting)", msg_type="warning")
 
+    # Hook must return an object (even empty)
     print("{}")
 
 if __name__ == "__main__":

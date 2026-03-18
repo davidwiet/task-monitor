@@ -1,7 +1,7 @@
 {
   "name": "task-monitor",
-  "version": "1.1.0",
-  "description": "Auditory and visual guardrails for autonomous Gemini CLI sessions.",
+  "version": "2.0.0",
+  "description": "Universal platform-aware auditory and visual guardrails for autonomous Gemini CLI sessions.",
   "author": "davidwiet",
   "icon": "assets/icon.svg",
   "settings": {

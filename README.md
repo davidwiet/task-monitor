@@ -1,67 +1,48 @@
-# 🛡️ Task Monitor (for Gemini CLI)
+# 🛡️ Task Monitor (v2.0.0)
 
-A specialized operational skill for the [Gemini CLI](https://geminicli.com) that provides automated auditory and visual feedback for task status, focus, and safety-critical events.
+Professional, platform-aware guardrails for the [Gemini CLI](https://geminicli.com) providing automated auditory and visual feedback for task status, focus, and safety-critical events.
 
 ## 🎧 Features
 
 ### 1. **"Work Complete!"** (Long-Task Notifications)
 Plays the iconic *Warcraft III* "Work complete!" sound when a task takes **120 seconds or longer** to finish.
-- **Why?** So you can walk away from your terminal during deep research or complex coding tasks without "babysitting" the progress bar.
+- **Why?** So you can walk away from your terminal during deep research or complex coding tasks.
+- **Focus-Aware:** Only plays sound if the terminal is **not in focus** (macOS).
 
-### 2. **Repetition Guard** (Loop Prevention)
-Detects when the AI gets stuck in a "Broken Record" loop (repeating the exact same message 3 times in a single turn).
-- **Action:** Halts the agent immediately.
+### 2. **Repetition & Loop Guard**
+Detects when the AI gets stuck in "Broken Record" loops (repeating messages or tool calls).
+- **Action:** Halts the agent immediately if a loop is detected (3x repetition).
 - **Sound:** Plays `LandingInterrupted.mp3`.
 - **Theme:** Displays a high-visibility **[TASK-MONITOR] ❯ Loop Detected** red alert.
 
 ### 3. **Focus Alerts** (Out-of-Focus Prompting)
 Triggers a system "Ping" if the agent is blocked by a permission prompt while your terminal window is **not in focus**.
-- **Why?** Prevents the agent from sitting idle for hours just because you switched to another tab and didn't see the "Approve? (y/n)" prompt.
+- **Why?** Prevents the agent from sitting idle because you switched tabs.
 
 ## 🎨 Visual Theme
-The skill provides a color-coded "System Console" experience:
-- 🔵 **Blue:** Successful completion info.
+The extension provides a color-coded "System Console" experience:
+- 🔵 **Blue:** Task completion notifications.
 - 🔴 **Red:** Critical safety alerts (loops).
 - 🟡 **Yellow:** User attention required.
+- 🟢 **Green:** Status updates when in-focus.
 
-## 🚀 Installation
+## 🚀 Installation & Configuration
 
-1. **Install the skill:**
+1. **Install the extension:**
    ```bash
-   gemini skills install https://github.com/dwietchner/task-monitor
+   gemini extensions link /path/to/task-monitor
    ```
 
-2. **Reload your session:**
-   ```bash
-   /skills reload
-   ```
+2. **Configure your hooks:**
+   The extension uses the following hooks in `gemini-extension.json`:
+   - `BeforeAgent`: Records task start time.
+   - `AfterAgent`: Monitors for loops and completion.
+   - `BeforeTool`: Guards against tool loops.
+   - `Notification`: Alerts for attention when away.
 
-3. **Configure your hooks:**
-   Add the following to your `~/.gemini/settings.json`:
-
-   ```json
-   "hooks": {
-     "AfterAgent": [
-       {
-         "name": "long-task-sound",
-         "type": "command",
-         "command": "python3 ~/.gemini/skills/task-monitor/scripts/play_long_task_sound.py"
-       },
-       {
-         "name": "loop-preventer",
-         "type": "command",
-         "command": "python3 ~/.gemini/skills/task-monitor/scripts/detect_loops.py"
-       }
-     ],
-     "Notification": [
-       {
-         "name": "active-window-notify",
-         "type": "command",
-         "command": "python3 ~/.gemini/skills/task-monitor/scripts/play_notification_sound.py"
-       }
-     ]
-   }
-   ```
+## 🌍 Platform Support
+- **macOS:** Full support for AppleScript-based terminal focus detection and `afplay` audio.
+- **Linux/Windows:** Visual notifications and universal loop detection (Audio support coming soon).
 
 ---
 *Created with 💙 for the Gemini CLI community.*
