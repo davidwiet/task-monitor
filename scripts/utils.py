@@ -32,19 +32,21 @@ def is_terminal_focused():
     except Exception:
         return True # Fail-safe: assume focused
 
+def get_asset_path(sound_name):
+    """Locates audio assets relative to the script location (Portable)."""
+    # __file__ is the path to utils.py, which is in scripts/
+    scripts_dir = os.path.dirname(os.path.abspath(__file__))
+    # The assets folder is at the same level as the scripts folder
+    ext_root = os.path.dirname(scripts_dir)
+    return os.path.join(ext_root, "assets", f"{sound_name}.mp3")
+
 def get_state_dir(session_id="default"):
-    """Returns a session-specific directory for state management."""
+    """Returns a session-specific directory for state management in the user's home."""
+    # We keep state in ~/.gemini/tmp/ to ensure it persists across different installation paths
     base_dir = os.path.expanduser("~/.gemini/tmp/task-monitor")
     session_dir = os.path.join(base_dir, session_id)
     os.makedirs(session_dir, exist_ok=True)
     return session_dir
-
-def get_asset_path(sound_name):
-    """Locates audio assets relative to the script location."""
-    # Assume we are in task-monitor/scripts/
-    scripts_dir = os.path.dirname(os.path.abspath(__file__))
-    ext_root = os.path.dirname(scripts_dir)
-    return os.path.join(ext_root, "assets", f"{sound_name}.mp3")
 
 def notify(message, msg_type="info"):
     """Standardized color-coded notification on stderr."""
