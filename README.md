@@ -55,7 +55,8 @@ The extension provides a color-coded "System Console" experience:
 
 ## 🌍 Platform Support
 - **macOS:** Full support for AppleScript-based terminal focus detection and `afplay` audio.
-- **Linux/Windows:** Visual notifications and universal loop detection (Audio support coming soon).
+- **Windows:** High-accuracy loop detection and native PowerShell-based audio.
+- **Linux:** Universal loop detection and `paplay`/`aplay` audio fallback.
 
 ---
 *Created with 💙 for the Gemini CLI community.*

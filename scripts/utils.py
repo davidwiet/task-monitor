@@ -61,17 +61,27 @@ def notify(message, msg_type="info"):
 def play_alert(sound_name):
     """Plays an alert sound with platform-appropriate tools."""
     asset_path = get_asset_path(sound_name)
-    
+
     if get_os() == "Darwin":
         if os.path.exists(asset_path):
-            # afplay in background with redirection to /dev/null
-            import time; subprocess.Popen(["afplay", asset_path]); time.sleep(0.1), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # afplay in background
+            import time; subprocess.Popen(["afplay", asset_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(0.1)
         else:
             # Fallback to system voice if asset missing
             subprocess.Popen(["say", sound_name.replace("-", " ")], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    elif get_os() == "Windows":
+        if os.path.exists(asset_path):
+            # Use PowerShell to play the MP3 on Windows
+            ps_command = f"(New-Object Media.MediaPlayer).Open('{asset_path}'); (New-Object Media.MediaPlayer).Play(); Start-Sleep -s 2"
+            subprocess.Popen(["powershell", "-c", ps_command], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        else:
+            # Simple beep if asset is missing
+            subprocess.Popen(["powershell", "-c", "[System.Console]::Beep(440, 500)"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     elif get_os() == "Linux":
-        # Placeholder for paplay/aplay
-        pass
+        # Attempt paplay (PulseAudio) or aplay (ALSA)
+        if os.path.exists(asset_path):
+            subprocess.Popen(["paplay", asset_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
 
 def get_start_time(session_id):
     """Retrieves start time from session-isolated file."""
