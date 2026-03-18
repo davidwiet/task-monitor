@@ -18,7 +18,9 @@ def main():
     
     # Check Duration
     start_time = get_start_time(session_id)
-    threshold = 120 # 2 minutes
+    # Flexible threshold from settings (default: 120s)
+    settings = payload.get("settings", {})
+    threshold = settings.get("general", {}).get("longTaskThreshold", 120)
     
     if start_time:
         duration = time.time() - start_time

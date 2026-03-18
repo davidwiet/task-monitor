@@ -5,8 +5,9 @@ Professional, platform-aware guardrails for the [Gemini CLI](https://geminicli.c
 ## 🎧 Features
 
 ### 1. **"Work Complete!"** (Long-Task Notifications)
-Plays the iconic *Warcraft III* "Work complete!" sound when a task takes **120 seconds or longer** to finish.
+Plays the iconic *Warcraft III* "Work complete!" sound when a task exceeds the threshold.
 - **Why?** So you can walk away from your terminal during deep research or complex coding tasks.
+- **Configurable:** By default, this triggers after **120 seconds**. You can customize this threshold in your settings (set to `0` to always trigger when away).
 - **Focus-Aware:** Only plays sound if the terminal is **not in focus** (macOS).
 
 ### 2. **Repetition & Loop Guard**
@@ -18,6 +19,18 @@ Detects when the AI gets stuck in "Broken Record" loops (repeating messages or t
 ### 3. **Focus Alerts** (Out-of-Focus Prompting)
 Triggers a system "Ping" if the agent is blocked by a permission prompt while your terminal window is **not in focus**.
 - **Why?** Prevents the agent from sitting idle because you switched tabs.
+
+## ⚙️ Configuration
+You can customize the extension's behavior in `gemini-extension.json` or through your user settings:
+
+```json
+"settings": {
+  "general": {
+    "longTaskThreshold": 120, // Seconds before "Work Complete!" sounds
+    "maxTurns": 15
+  }
+}
+```
 
 ## 🎨 Visual Theme
 The extension provides a color-coded "System Console" experience:

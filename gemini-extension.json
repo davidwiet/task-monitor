@@ -6,7 +6,8 @@
   "icon": "assets/icon.svg",
   "settings": {
     "general": {
-      "maxTurns": 15
+      "maxTurns": 15,
+      "longTaskThreshold": 0
     }
   },
   "hooks": {

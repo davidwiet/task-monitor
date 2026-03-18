@@ -65,7 +65,7 @@ def play_alert(sound_name):
     if get_os() == "Darwin":
         if os.path.exists(asset_path):
             # afplay in background with redirection to /dev/null
-            subprocess.Popen(["afplay", asset_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            import time; subprocess.Popen(["afplay", asset_path]); time.sleep(0.1), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
             # Fallback to system voice if asset missing
             subprocess.Popen(["say", sound_name.replace("-", " ")], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
