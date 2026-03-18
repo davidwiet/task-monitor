@@ -1,0 +1,57 @@
+{
+  "name": "task-monitor",
+  "version": "1.0.0",
+  "description": "Auditory and visual guardrails for autonomous Gemini CLI sessions.",
+  "author": "davidwiet",
+  "icon": "assets/icon.svg",
+  "hooks": {
+    "BeforeAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "record-start",
+            "type": "command",
+            "command": "python3 scripts/record_start.py"
+          }
+        ]
+      }
+    ],
+    "AfterAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "monitor-task",
+            "type": "command",
+            "command": "python3 scripts/monitor_task.py"
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "monitor-tool",
+            "type": "command",
+            "command": "python3 scripts/monitor_tool.py"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "active-window-notify",
+            "type": "command",
+            "command": "python3 scripts/play_notification_sound.py"
+          }
+        ]
+      }
+    ]
+  }
+}

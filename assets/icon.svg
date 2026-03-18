@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#1A1B26" stroke="#3B4252" stroke-width="8"/>
+  
+  <!-- Outer Ring (Auditory Pulse) -->
+  <circle cx="256" cy="256" r="180" stroke="#4C566A" stroke-width="4" stroke-dasharray="20 20"/>
+  
+  <!-- Terminal Brackets [ ] -->
+  <path d="M160 160H120V352H160" stroke="#81A1C1" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M352 160H392V352H392" stroke="#81A1C1" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Central Pulse / Monitoring Line -->
+  <path d="M180 256H220L240 180L272 332L292 256H332" stroke="#88C0D0" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- "Live" Indicator Dot -->
+  <circle cx="256" cy="100" r="12" fill="#BF616A">
+    <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+  </circle>
+</svg>
